@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Convert::Pluggable 3"
-.TH Convert::Pluggable 3 "2014-03-18" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH Convert::Pluggable 3 "2014-03-19" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -134,42 +134,57 @@ Convert::Pluggable \- convert between various units of measurement
 .SH "VERSION"
 .IX Header "VERSION"
 Version 0.01
-.SS "new"
-.IX Subsection "new"
-.SH "SYNOPSIS convert between various units of measurement"
-.IX Header "SYNOPSIS convert between various units of measurement"
-.Vb 1
-\&    use Convert::Pluggable;
-\&
-\&    ...
-.Ve
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+convert between various units of measurement
+.PP
+\&\f(CW\*(C`use Convert::Pluggable;\*(C'\fR
+.PP
+\&\f(CW\*(C`...\*(C'\fR
+.PP
+\&\f(CW\*(C` my $result = $c\-\*(C'\fRconvert( { 'factor' => '5', 'fromUnit' => 'feet', 'toUnit' => 'inches', 'precision' => '3', } ); >
+.PP
+will produce '60.000'.
+.PP
+See Convert\-Pluggable.t for many more example uses.
 .SH "EXPORT"
 .IX Header "EXPORT"
 convert
-.SH "SUBROUTINES/METHODS =item new =item convert_temperatures =item convert =item get_matches =item get_units"
-.IX Header "SUBROUTINES/METHODS =item new =item convert_temperatures =item convert =item get_matches =item get_units"
-.SS "convert_temperatures convert between temperature units: fahrenheit, rankine, etc."
-.IX Subsection "convert_temperatures convert between temperature units: fahrenheit, rankine, etc."
-.SS "get_matches helper function: [1] get factors for later calculating conversion [2] get trigger 'types' to determine if we can perform a calculation in the first place [3] get canoncial units for massaging output [4] determine if a unit may be negative"
-.IX Subsection "get_matches helper function: [1] get factors for later calculating conversion [2] get trigger 'types' to determine if we can perform a calculation in the first place [3] get canoncial units for massaging output [4] determine if a unit may be negative"
-.ie n .SS "convert "" my $result = $c\-""convert( { 'factor' => '5', 'fromUnit' => 'feet', 'toUnit' => 'inches', 'precision' => '3', } ); >"
-.el .SS "convert \f(CW my $result = $c\-\fPconvert( { 'factor' => '5', 'fromUnit' => 'feet', 'toUnit' => 'inches', 'precision' => '3', } ); >"
-.IX Subsection "convert  my $result = $c-convert( { 'factor' => '5', 'fromUnit' => 'feet', 'toUnit' => 'inches', 'precision' => '3', } ); >"
+.SH "SUBROUTINES/METHODS"
+.IX Header "SUBROUTINES/METHODS"
+.SS "\fInew()\fP"
+.IX Subsection "new()"
+Create a new Conversion object.
+.SS "\fIconvert_temperatures()\fP"
+.IX Subsection "convert_temperatures()"
+A function for converting between various temperature units.  Currently supports Fahrenheit, Celsius, Kelvin, Rankine, and Raumur.
+.SS "\fIconvert()\fP"
+.IX Subsection "convert()"
+This is the workhorse.  All conversion work (except for temperatures) gets done here.  This is the only exported sub.
+.SS "\fIget_matches()\fP"
+.IX Subsection "get_matches()"
+.IP "\(bu" 4
+get factors for later calculating conversion
+.IP "\(bu" 4
+get trigger 'types' to determine if we can perform a calculation in the first place
+.IP "\(bu" 4
+get canoncial units for massaging output
+.IP "\(bu" 4
+determine if a unit may be negative
+.Sp
+This gets some useful metadata for \fIconvert()\fR to carry out its work.
+.SS "\fIget_units()\fP"
+.IX Subsection "get_units()"
+This is where you add new unit types so that \fIconvert()\fR can operate on them.  Currently supported units of measurement
+are: mass, length, time, pressure, energy, power, angle, force, temperature.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 bradley andersen, \f(CW\*(C`<bradley at pvnp.us>\*(C'\fR
 .SH "BUGS"
 .IX Header "BUGS"
-Please report any bugs or feature requests to \f(CW\*(C`bug\-convert::pluggable at rt.cpan.org\*(C'\fR, or through
-the web interface at <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Convert::Pluggable>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
 .SH "SUPPORT"
 .IX Header "SUPPORT"
 You can find documentation for this module with the perldoc command.
-.PP
-.Vb 1
-\&    perldoc Convert::Pluggable
-.Ve
 .PP
 You can also look for information at:
 .IP "\(bu" 4
@@ -188,49 +203,36 @@ AnnoCPAN: Annotated \s-1CPAN\s0 documentation
 Search \s-1CPAN\s0
 .Sp
 <http://search.cpan.org/dist/Convert::Pluggable/>
-.ie n .SH "ACKNOWLEDGEMENTS Special thanks to @mintsoft and @jagtalon"
-.el .SH "ACKNOWLEDGEMENTS Special thanks to \f(CW@mintsoft\fP and \f(CW@jagtalon\fP"
-.IX Header "ACKNOWLEDGEMENTS Special thanks to @mintsoft and @jagtalon"
+.SH "ACKNOWLEDGEMENTS"
+.IX Header "ACKNOWLEDGEMENTS"
+Special thanks to \f(CW@mintsoft\fR and \f(CW@jagtalon\fR
 .SH "LICENSE AND COPYRIGHT"
 .IX Header "LICENSE AND COPYRIGHT"
 Copyright 2014 bradley andersen.
 .PP
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (2.0). You may obtain a
-copy of the full license at:
+No specific license yet.
+.SH "PRIOR ART"
+.IX Header "PRIOR ART"
+Bot::BasicBot::Pluggable::Module::Convert
 .PP
-<http://www.perlfoundation.org/artistic_license_2_0>
+relies on
 .PP
-Any use, modification, and distribution of the Standard or Modified
-Versions is governed by this Artistic License. By using, modifying or
-distributing the Package, you accept this license. Do not use, modify,
-or distribute the Package, if you do not accept this license.
-.PP
-If your Modified Version has been derived from a Modified Version made
-by someone other than you, you are nevertheless required to ensure that
-your Modified Version complies with the requirements of this license.
-.PP
-This license does not grant you the right to use any trademark, service
-mark, tradename, or logo of the Copyright Holder.
-.PP
-This license includes the non-exclusive, worldwide, free-of-charge
-patent license to make, have made, use, offer to sell, sell, import and
-otherwise transfer the Package with respect to any patent claims
-licensable by the Copyright Holder that are necessarily infringed by the
-Package. If you institute patent litigation (including a cross-claim or
-counterclaim) against any party alleging that the Package constitutes
-direct or contributory patent infringement, then this Artistic License
-to you shall terminate on the date that such litigation is filed.
-.PP
-Disclaimer of Warranty: \s-1THE\s0 \s-1PACKAGE\s0 \s-1IS\s0 \s-1PROVIDED\s0 \s-1BY\s0 \s-1THE\s0 \s-1COPYRIGHT\s0 \s-1HOLDER\s0
-\&\s-1AND\s0 \s-1CONTRIBUTORS\s0 "\s-1AS\s0 \s-1IS\s0' \s-1AND\s0 \s-1WITHOUT\s0 \s-1ANY\s0 \s-1EXPRESS\s0 \s-1OR\s0 \s-1IMPLIED\s0 \s-1WARRANTIES\s0.
-\&\s-1THE\s0 \s-1IMPLIED\s0 \s-1WARRANTIES\s0 \s-1OF\s0 \s-1MERCHANTABILITY\s0, \s-1FITNESS\s0 \s-1FOR\s0 A \s-1PARTICULAR\s0
-\&\s-1PURPOSE\s0, \s-1OR\s0 NON-INFRINGEMENT \s-1ARE\s0 \s-1DISCLAIMED\s0 \s-1TO\s0 \s-1THE\s0 \s-1EXTENT\s0 \s-1PERMITTED\s0 \s-1BY\s0
-\&\s-1YOUR\s0 \s-1LOCAL\s0 \s-1LAW\s0. \s-1UNLESS\s0 \s-1REQUIRED\s0 \s-1BY\s0 \s-1LAW\s0, \s-1NO\s0 \s-1COPYRIGHT\s0 \s-1HOLDER\s0 \s-1OR\s0
-\&\s-1CONTRIBUTOR\s0 \s-1WILL\s0 \s-1BE\s0 \s-1LIABLE\s0 \s-1FOR\s0 \s-1ANY\s0 \s-1DIRECT\s0, \s-1INDIRECT\s0, \s-1INCIDENTAL\s0, \s-1OR\s0
-\&\s-1CONSEQUENTIAL\s0 \s-1DAMAGES\s0 \s-1ARISING\s0 \s-1IN\s0 \s-1ANY\s0 \s-1WAY\s0 \s-1OUT\s0 \s-1OF\s0 \s-1THE\s0 \s-1USE\s0 \s-1OF\s0 \s-1THE\s0 \s-1PACKAGE\s0,
-\&\s-1EVEN\s0 \s-1IF\s0 \s-1ADVISED\s0 \s-1OF\s0 \s-1THE\s0 \s-1POSSIBILITY\s0 \s-1OF\s0 \s-1SUCH\s0 \s-1DAMAGE\s0.
-.SS "get_units this is where the unit definitions come from.  if you want to add new unit types, do so here."
-.IX Subsection "get_units this is where the unit definitions come from.  if you want to add new unit types, do so here."
-.SH "TODO =item can add DDG massaging later if useful =item need better error handling =item add complete test suite =item all args to functions should be hash refs! =item store units data in a file? =item add more unit types (digital, cooking, etc.)"
-.IX Header "TODO =item can add DDG massaging later if useful =item need better error handling =item add complete test suite =item all args to functions should be hash refs! =item store units data in a file? =item add more unit types (digital, cooking, etc.)"
+Math::Units
+.SH "TODO"
+.IX Header "TODO"
+.IP "\(bu" 4
+add \s-1DDG\s0 massaging later if useful
+.IP "\(bu" 4
+better error handling
+.IP "\(bu" 4
+all args to functions should be hash refs!
+.IP "\(bu" 4
+store units data in a file?
+.IP "\(bu" 4
+add more unit types (digital, cooking, etc.)
+.IP "\(bu" 4
+add more tests and better test output
+.IP "\(bu" 4
+fix this documentation!
+.IP "\(bu" 4
+what happens when two units have the same notation?

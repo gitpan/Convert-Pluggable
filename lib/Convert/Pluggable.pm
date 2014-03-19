@@ -11,21 +11,8 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert);
 
-=head1 NAME
+our $VERSION = '0.011';
 
-Convert::Pluggable - convert between various units of measurement
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
-
-our $VERSION = '0.01';
-
-=head2 new
-
-=cut
 sub new {
     my $class = shift;
     my $self = bless {}, $class;
@@ -33,31 +20,8 @@ sub new {
     return $self;
 }
 
-
-=head1 SYNOPSIS
-    convert between various units of measurement
-
-    use Convert::Pluggable;
-
-    ...
-
-=head1 EXPORT
-
-convert
-
-=head1 SUBROUTINES/METHODS
-    =item new 
-    =item convert_temperatures
-    =item convert
-    =item get_matches 
-    =item get_units
-=cut
-
 my @types = @{get_units()};
 
-=head2 convert_temperatures
-    convert between temperature units: fahrenheit, rankine, etc.
-=cut
 sub convert_temperatures {
     # ##
     # F  = (C * 1.8) + 32            # celsius to fahrenheit
@@ -92,13 +56,6 @@ sub convert_temperatures {
     return $factor;
 }
 
-=head2 get_matches
-       helper function:
-           [1] get factors for later calculating conversion
-           [2] get trigger 'types' to determine if we can perform a calculation in the first place
-           [3] get canoncial units for massaging output
-           [4] determine if a unit may be negative 
-=cut
 sub get_matches {
     my $matches = shift;
     my @matches = @{$matches};
@@ -146,10 +103,6 @@ sub get_matches {
     return \%matches;
 }
 
-
-=head2 convert
-    C< my $result = $c->convert( { 'factor' => '5', 'fromUnit' => 'feet', 'toUnit' => 'inches', 'precision' => '3', } ); >
-=cut
 sub convert {
     my $self = shift;
 
@@ -191,92 +144,6 @@ sub convert {
     return sprintf("%.$conversion->{'precision'}f", $result);
 };
 
-=head1 AUTHOR
-
-bradley andersen, C<< <bradley at pvnp.us> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-convert::pluggable at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Convert::Pluggable>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Convert::Pluggable
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Convert::Pluggable>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Convert::Pluggable>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Convert::Pluggable>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Convert::Pluggable/>
-
-=back
-
-=head1 ACKNOWLEDGEMENTS
-    Special thanks to @mintsoft and @jagtalon
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2014 bradley andersen.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (2.0). You may obtain a
-copy of the full license at:
-
-L<http://www.perlfoundation.org/artistic_license_2_0>
-
-Any use, modification, and distribution of the Standard or Modified
-Versions is governed by this Artistic License. By using, modifying or
-distributing the Package, you accept this license. Do not use, modify,
-or distribute the Package, if you do not accept this license.
-
-If your Modified Version has been derived from a Modified Version made
-by someone other than you, you are nevertheless required to ensure that
-your Modified Version complies with the requirements of this license.
-
-This license does not grant you the right to use any trademark, service
-mark, tradename, or logo of the Copyright Holder.
-
-This license includes the non-exclusive, worldwide, free-of-charge
-patent license to make, have made, use, offer to sell, sell, import and
-otherwise transfer the Package with respect to any patent claims
-licensable by the Copyright Holder that are necessarily infringed by the
-Package. If you institute patent litigation (including a cross-claim or
-counterclaim) against any party alleging that the Package constitutes
-direct or contributory patent infringement, then this Artistic License
-to you shall terminate on the date that such litigation is filed.
-
-Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
-AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
-THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
-YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
-CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
-CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-=cut
-
-=head2 get_units
-    this is where the unit definitions come from.  if you want to add new unit types, do so here.
-=cut
 sub get_units {
     # metric ton is base unit for mass
     # known SI units and aliases / plurals
@@ -865,22 +732,175 @@ sub get_units {
             'can_be_negative' => 1,
         },
     );  
-
-    # build the keys:
-    my @types = (@mass, @length, @time, @pressure, @energy, @power, @angle, @force, @temperature);    # unit types available for conversion
+    
+    # unit types available for conversion
+    my @types = (@mass, @length, @time, @pressure, @energy, @power, @angle, @force, @temperature);    
     
     return \@types;
 }
 
-=head1 TODO
-    =item can add DDG massaging later if useful
-    =item need better error handling
-    =item add complete test suite
-    =item all args to functions should be hash refs!
-    =item store units data in a file?
-    =item add more unit types (digital, cooking, etc.)
-=cut
-
 
 
 1;
+
+
+
+__END__
+=head1 NAME
+
+Convert::Pluggable - convert between various units of measurement
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 SYNOPSIS
+
+convert between various units of measurement
+
+C<use Convert::Pluggable;>
+
+C<...>
+
+C< my $result = $c->convert( { 'factor' => '5', 'fromUnit' => 'feet', 'toUnit' => 'inches', 'precision' => '3', } ); >
+
+will produce '60.000'.
+
+See Convert-Pluggable.t for many more example uses.
+
+=head1 EXPORT
+
+convert
+
+=head1 SUBROUTINES/METHODS
+
+=head2 new()
+
+Create a new Conversion object.
+
+=head2 convert_temperatures()
+
+A function for converting between various temperature units.  Currently supports Fahrenheit, Celsius, Kelvin, Rankine, and Raumur.
+
+=head2 convert()
+
+This is the workhorse.  All conversion work (except for temperatures) gets done here.  This is the only exported sub.
+
+=head2 get_matches() 
+
+=over 4
+
+=item *
+
+get factors for later calculating conversion
+
+=item *
+
+get trigger 'types' to determine if we can perform a calculation in the first place
+
+=item *
+
+get canoncial units for massaging output
+
+=item *
+
+determine if a unit may be negative 
+
+This gets some useful metadata for convert() to carry out its work.
+
+=back
+
+=head2 get_units()
+
+This is where you add new unit types so that convert() can operate on them.  Currently supported units of measurement
+are: mass, length, time, pressure, energy, power, angle, force, temperature. 
+
+=head1 AUTHOR
+
+bradley andersen, C<< <bradley at pvnp.us> >>
+
+=head1 BUGS
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker (report bugs here)
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Convert::Pluggable>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Convert::Pluggable>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/Convert::Pluggable>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Convert::Pluggable/>
+
+=back
+
+=head1 ACKNOWLEDGEMENTS
+
+Special thanks to @mintsoft and @jagtalon
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2014 bradley andersen.
+
+No specific license yet.
+
+=head1 PRIOR ART
+
+Bot::BasicBot::Pluggable::Module::Convert
+
+relies on 
+
+Math::Units
+
+=head1 TODO
+
+=over 4
+
+=item *
+
+add DDG massaging later if useful
+
+=item *
+
+better error handling
+
+=item *
+
+all args to functions should be hash refs!
+ 
+=item *
+    
+store units data in a file?
+
+=item *
+
+add more unit types (digital, cooking, etc.)
+
+=item *
+
+add more tests and better test output
+
+=item *
+
+fix this documentation!
+
+=item *
+
+what happens when two units have the same notation?
+
+=back
+
+=cut
