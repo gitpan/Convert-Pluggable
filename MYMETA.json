@@ -1,5 +1,5 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "convert between various units of measurement",
    "author" : [
       "bradley andersen <bradley@pvnp.us>"
    ],
@@ -32,10 +32,11 @@
       },
       "runtime" : {
          "requires" : {
+            "Data::Float" : "0",
             "perl" : "5.006"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.01"
+   "version" : "0.011"
 }
