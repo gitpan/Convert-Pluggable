@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Convert::Pluggable 3"
-.TH Convert::Pluggable 3 "2014-03-19" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH Convert::Pluggable 3 "2014-03-23" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -133,7 +133,7 @@
 Convert::Pluggable \- convert between various units of measurement
 .SH "VERSION"
 .IX Header "VERSION"
-Version 0.01
+Version 0.014
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 convert between various units of measurement
@@ -147,6 +147,8 @@ convert between various units of measurement
 will produce '60.000'.
 .PP
 See Convert\-Pluggable.t for many more example uses.
+.PP
+See https://ddh5.duckduckgo.com/?q=10000+minutes+in+microseconds for test uses
 .SH "EXPORT"
 .IX Header "EXPORT"
 convert
@@ -235,4 +237,4 @@ add more tests and better test output
 .IP "\(bu" 4
 fix this documentation!
 .IP "\(bu" 4
-what happens when two units have the same notation?
+what happens when two units have the same notation? (e.g., 'kilometer' and 'kilobyte' both can use 'K')

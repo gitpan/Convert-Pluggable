@@ -62,11 +62,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = Convert::Pluggable
 NAME_SYM = Convert_Pluggable
-VERSION = 0.011
+VERSION = 0.014
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_011
+VERSION_SYM = 0_014
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.011
+XS_VERSION = 0.014
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -258,7 +258,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Convert-Pluggable
-DISTVNAME = Convert-Pluggable-0.011
+DISTVNAME = Convert-Pluggable-0.014
 
 
 # --- MakeMaker macro section:
@@ -502,7 +502,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) 'requires:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Data::Float: 0' >> META_new.yml
 	$(NOECHO) $(ECHO) '  perl: 5.006' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: 0.011' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: 0.014' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
 	$(NOECHO) $(ECHO) '{' > META_new.json
@@ -545,7 +545,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.011"' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.014"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
 

@@ -11,12 +11,12 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert);
 
-our $VERSION = '0.011';
+our $VERSION = '0.014';
 
 sub new {
     my $class = shift;
     my $self = bless {}, $class;
-
+    
     return $self;
 }
 
@@ -63,8 +63,8 @@ sub get_matches {
     $matches[0] =~ s/"/inches/; 
     $matches[0] =~ s/'/feet/; 
     $matches[1] =~ s/"/inches/; 
-    $matches[1] =~ s/'/feet/; 
-    
+    $matches[1] =~ s/'/feet/;
+
     # often a choke point, so leaving this in:
     #use Data::Dumper; print STDERR Dumper(\@matches);
     
@@ -75,7 +75,7 @@ sub get_matches {
     
     foreach my $match (@matches) {
         foreach my $type (@types) {
-            if ($match eq $type->{'unit'} || grep { $_ eq $match } @{$type->{'aliases'}}) {
+            if (lc $match eq $type->{'unit'} || grep { $_ eq lc $match } @{$type->{'aliases'}}) {
                 push(@match_types, $type->{'type'});
                 push(@factors, $type->{'factor'});
                 push(@units, $type->{'unit'});
@@ -106,8 +106,8 @@ sub get_matches {
 sub convert {
     my $self = shift;
 
-    my $conversion = shift;     
-
+    my $conversion = shift;
+    
     my $matches = get_matches([$conversion->{'fromUnit'}, $conversion->{'toUnit'}]);  
    
     if (looks_like_number($conversion->{'factor'})) {
@@ -140,7 +140,27 @@ sub convert {
     }
 
     my $result = $conversion->{'factor'} * ($matches->{'factor_2'} / $matches->{'factor_1'});
-    
+
+###
+### while massaging output is left to the implementation, there are some cases
+### where answers might seem nonsensical, based on the input precision.  
+### for example, converting '10mg to tons' with a precision of '3' gives '10 milligrams is 0.000 tons'
+### the code below is one way to handle such cases:
+###
+###        if ($result == 0 || length($result) > 2*$precision + 1) {
+###            # '10 mg to tons'                 => [0] , [1.10231e-08]
+###            # '10000 minutes in microseconds' => [600000000000]
+###            # '2500kcal in tons of tnt'       => [66194.888]
+###
+###            if ($result == 0) {
+###                # rounding error
+###                $result = convert_temperatures($matches->{'from_unit'}, $matches->{'to_unit'}, $factor);
+###            }
+###
+###            $f_result = (sprintf "%.${precision}g", $result);
+###        }
+###   
+
     return sprintf("%.$conversion->{'precision'}f", $result);
 };
 
@@ -354,6 +374,12 @@ sub get_units {
             'unit'      => 'microsecond',
             'factor'    => '86400000000',
             'aliases'   => ['microseconds', 'microsec', 'microsecs', 'us'],
+            'type'      => 'duration',
+        },
+        {
+            'unit'      => 'nanosecond',
+            'factor'    => '86400000000000',
+            'aliases'   => ['nanoseconds', 'nanosec', 'nanosecs', 'ns'],
             'type'      => 'duration',
         },
         {
@@ -733,8 +759,218 @@ sub get_units {
         },
     );  
     
+    # bit is base unit for digital
+    # while not absolutely correct, a byte is defined as 8 bits herein.
+    # known SI units and aliases / plurals
+    my @digital = (
+        {   
+            'unit'            => 'bit',
+            'factor'          => 1,           
+            'aliases'         => ['bits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'kilobit',
+            'factor'          => 1/1_000,           
+            'aliases'         => ['kbit', 'kbits', 'kilobits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'megabit',
+            'factor'          => 1/1_000_000,           
+            'aliases'         => ['mbit', 'mbits', 'megabits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'gigabit',
+            'factor'          => 1/1_000_000_000,           
+            'aliases'         => ['gbit', 'gigabits', 'gbits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'terabit',
+            'factor'          => 1/1_000_000_000_000,           
+            'aliases'         => ['tbit', 'tbits', 'terabits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'petabit',
+            'factor'          => 1/1_000_000_000_000_000,           
+            'aliases'         => ['pbit', 'pbits', 'petabits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'exabit',
+            'factor'          => 1/1_000_000_000_000_000_000,           
+            'aliases'         => ['ebit', 'ebits', 'exabits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'zettabit',
+            'factor'          => 1/1_000_000_000_000_000_000_000,           
+            'aliases'         => ['zbit', 'zbits', 'zettabits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'yottabit',
+            'factor'          => 1/1_000_000_000_000_000_000_000_000,           
+            'aliases'         => ['ybit', 'ybits', 'yottabits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'kibibit',
+            'factor'          => 1/1024,           
+            'aliases'         => ['kibit', 'kibits', 'kibibits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'mebibit',
+            'factor'          => 1/1024**2,           
+            'aliases'         => ['mibit', 'mibits', 'mebibits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'gibibit',
+            'factor'          => 1/1024**3,           
+            'aliases'         => ['gibit', 'gibits', 'gibibits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'tebibit',
+            'factor'          => 1/1024**4,           
+            'aliases'         => ['tibit', 'tibits', 'tebibits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'pebibit',
+            'factor'          => 1/1024**5,           
+            'aliases'         => ['pibit', 'pibits', 'pebibits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'exbibit',
+            'factor'          => 1/1024**6,           
+            'aliases'         => ['eibit', 'eibits', 'exbibits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'zebibit',
+            'factor'          => 1/1024**7,           
+            'aliases'         => ['zibit', 'zibits', 'zebibits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'yobibit',
+            'factor'          => 1/1024**8,           
+            'aliases'         => ['yibit', 'yibits', 'yobibits'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'byte',
+            'factor'          => 1/8,           
+            'aliases'         => ['bytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'kilobyte',
+            'factor'          => 1/8_000,           
+            'aliases'         => ['kb', 'kbs', 'kilobytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'megabyte',
+            'factor'          => 1/8_000_000,           
+            'aliases'         => ['mb', 'mbs', 'megabytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'gigabyte',
+            'factor'          => 1/8_000_000_000,           
+            'aliases'         => ['gb', 'gbs', 'gigabytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'terabyte',
+            'factor'          => 1/8_000_000_000_000,           
+            'aliases'         => ['tb', 'tbs', 'terabytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'petabyte',
+            'factor'          => 1/8_000_000_000_000_000,           
+            'aliases'         => ['pb', 'pbs', 'petabytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'exabyte',
+            'factor'          => 1/8_000_000_000_000_000_000,           
+            'aliases'         => ['eb', 'ebs', 'exabytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'zettabyte',
+            'factor'          => 1/8_000_000_000_000_000_000_000,           
+            'aliases'         => ['zb', 'zbs', 'zettabytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'yottabyte',
+            'factor'          => 1/8_000_000_000_000_000_000_000_000,           
+            'aliases'         => ['yb', 'ybs', 'yottabytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'kibibyte',
+            'factor'          => 1/8192,           
+            'aliases'         => ['kib', 'kibs', 'kibibytes'],       # KB     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'mebibyte',
+            'factor'          => 1/8388608,           
+            'aliases'         => ['mib', 'mibs', 'mebibytes'],       # MB
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'gibibyte',
+            'factor'          => 1/8589934592,                       # 1/8*1024**3 ...           
+            'aliases'         => ['gib', 'gibs', 'gibibytes'],       # GB ...
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'tebibyte',
+            'factor'          => 1/8796093022208,           
+            'aliases'         => ['tib', 'tibs', 'tebibytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'pebibyte',
+            'factor'          => 1/9007199254740992,                 # 1/8*1024**5 ...           
+            'aliases'         => ['pib', 'pibs', 'pebibytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'exbibyte',
+            'factor'          => 1/9.22337203685478e+18,           
+            'aliases'         => ['eib', 'eibs', 'exbibytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'zebibyte',
+            'factor'          => 1/9.44473296573929e+21,           
+            'aliases'         => ['zib', 'zibs', 'zebibytes'],     
+            'type'            => 'digital',
+        },
+        {   
+            'unit'            => 'yobibyte',
+            'factor'          => 1/9.67140655691703e+24,           
+            'aliases'         => ['yib', 'yibs', 'yobibytes'],     
+            'type'            => 'digital',
+        },
+    );
+
     # unit types available for conversion
-    my @types = (@mass, @length, @time, @pressure, @energy, @power, @angle, @force, @temperature);    
+    my @types = (@mass, @length, @time, @pressure, @energy, @power, @angle, @force, @temperature, @digital);    
     
     return \@types;
 }
@@ -752,7 +988,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.01
+Version 0.014
 
 =head1 SYNOPSIS
 
@@ -767,6 +1003,8 @@ C< my $result = $c->convert( { 'factor' => '5', 'fromUnit' => 'feet', 'toUnit' =
 will produce '60.000'.
 
 See Convert-Pluggable.t for many more example uses.
+
+See https://ddh5.duckduckgo.com/?q=10000+minutes+in+microseconds for test uses
 
 =head1 EXPORT
 
@@ -899,7 +1137,7 @@ fix this documentation!
 
 =item *
 
-what happens when two units have the same notation?
+what happens when two units have the same notation? (e.g., 'kilometer' and 'kilobyte' both can use 'K')
 
 =back
 

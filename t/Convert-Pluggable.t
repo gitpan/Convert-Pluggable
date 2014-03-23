@@ -1,4 +1,4 @@
-use Test::More tests => 51;
+use Test::More tests => 58;
 
 BEGIN { use_ok('Convert::Pluggable') };
 
@@ -153,3 +153,24 @@ is($result, undef, 'OK');
 
 $result = $c->convert( { 'factor' => 'puff', 'fromUnit' => 'toke', 'toUnit' => 'kludge', 'precision' => '3', } );
 is($result, undef, 'OK');
+    
+$result = $c->convert( { 'factor' => '10', 'fromUnit' => 'milligrams', 'toUnit' => 'tons', 'precision' => '3', } );
+is($result, '0.000', '10 milligrams is 1.1e-08 tons');
+
+$result = $c->convert( { 'factor' => '10000', 'fromUnit' => 'minutes', 'toUnit' => 'microseconds', 'precision' => '3', } );
+is($result, '600000000000.000', '10000 minutes is 6e+11 microseconds');
+
+$result = $c->convert( { 'factor' => '5', 'fromUnit' => 'bytes', 'toUnit' => 'bit', 'precision' => '3', } );
+is($result, '40.000', '5 bytes is 40.000 bits');
+
+$result = $c->convert( { 'factor' => '5', 'fromUnit' => 'GB', 'toUnit' => 'megabyte', 'precision' => '3', } );
+is($result, '5000.000', '5 gigabytes is 5000.000 megabytes');
+
+$result = $c->convert( { 'factor' => '0.013', 'fromUnit' => 'mb', 'toUnit' => 'bits', 'precision' => '3', } );
+is($result, '104000.000', '0.013 megabytes is 104000.000 bits');
+
+$result = $c->convert( { 'factor' => '1', 'fromUnit' => 'exabyte', 'toUnit' => 'pib', 'precision' => '3', } );
+is($result, '888.178', '1 exabyte is 888.178 pebibytes');
+
+$result = $c->convert( { 'factor' => '1', 'fromUnit' => 'yb', 'toUnit' => 'yib', 'precision' => '3', } );
+is($result, '0.827', '1 yottabyte is 0.827 yobibytes');
