@@ -9,9 +9,9 @@ use Data::Float qw/float_is_infinite float_is_nan/;
 
 use Exporter qw(import);
  
-our @EXPORT_OK = qw(convert);
+our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.015';
+our $VERSION = '0.016';
 
 sub new {
     my $class = shift;
@@ -988,7 +988,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.015
+Version 0.016
 
 =head1 SYNOPSIS
 
