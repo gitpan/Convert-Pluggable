@@ -6,7 +6,7 @@ build_requires:
   Test::More: 0
 configure_requires:
   ExtUtils::MakeMaker: 0
-dynamic_config: 0
+dynamic_config: 1
 generated_by: 'ExtUtils::MakeMaker version 6.76, CPAN::Meta::Converter version 2.132830'
 license: unknown
 meta-spec:
@@ -20,4 +20,4 @@ no_index:
 requires:
   Data::Float: 0
   perl: 5.006
-version: 0.014
+version: 0.015

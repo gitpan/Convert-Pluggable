@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert);
 
-our $VERSION = '0.014';
+our $VERSION = '0.015';
 
 sub new {
     my $class = shift;
@@ -988,7 +988,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.014
+Version 0.015
 
 =head1 SYNOPSIS
 
@@ -1051,7 +1051,7 @@ This gets some useful metadata for convert() to carry out its work.
 =head2 get_units()
 
 This is where you add new unit types so that convert() can operate on them.  Currently supported units of measurement
-are: mass, length, time, pressure, energy, power, angle, force, temperature. 
+are: mass, length, time, pressure, energy, power, angle, force, temperature, digital. 
 
 =head1 AUTHOR
 
