@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.016';
+our $VERSION = '0.017';
 
 sub new {
     my $class = shift;
@@ -60,10 +60,10 @@ sub get_matches {
     my $matches = shift;
     my @matches = @{$matches};
 
-    $matches[0] =~ s/"/inches/; 
-    $matches[0] =~ s/'/feet/; 
-    $matches[1] =~ s/"/inches/; 
-    $matches[1] =~ s/'/feet/;
+###    $matches[0] =~ s/"/inches/; 
+###    $matches[0] =~ s/'/feet/; 
+###    $matches[1] =~ s/"/inches/; 
+###    $matches[1] =~ s/'/feet/;
 
     # often a choke point, so leaving this in:
     #use Data::Dumper; print STDERR Dumper(\@matches);
@@ -108,7 +108,7 @@ sub convert {
 
     my $conversion = shift;
     
-    my $matches = get_matches([$conversion->{'fromUnit'}, $conversion->{'toUnit'}]);  
+    my $matches = get_matches([$conversion->{'from_unit'}, $conversion->{'to_unit'}]);  
    
     if (looks_like_number($conversion->{'factor'})) {
         # looks_like_number thinks 'Inf' and 'NaN' are numbers:
@@ -123,23 +123,17 @@ sub convert {
     
     return if $conversion->{'factor'} =~ /[[:alpha:]]/;
 
-    # for rounding to match input precision:
-    my $nearest = '1';
-    for my $i (1 .. $conversion->{'precision'} - 1) {
-        $nearest = '0' . $nearest;
-    }   # e.g., if requested (input) precision is 3 => $nearest = '001'
-    $nearest = '.' . $nearest;
-    
     # matches must be of the same type (e.g., can't convert mass to length):
     return if ($matches->{'type_1'} ne $matches->{'type_2'});
 
     # run the conversion:
     # temperatures don't have 1:1 conversions, so they get special treatment:
     if ($matches->{'type_1'} eq 'temperature') {
-        return sprintf("%.$conversion->{'precision'}f", convert_temperatures($matches->{'from_unit'}, $matches->{'to_unit'}, $conversion->{'factor'}));
+        $matches->{'result'} = convert_temperatures($matches->{'from_unit'}, $matches->{'to_unit'}, $conversion->{'factor'})
     }
-
-    my $result = $conversion->{'factor'} * ($matches->{'factor_2'} / $matches->{'factor_1'});
+    else {
+        $matches->{'result'} = $conversion->{'factor'} * ($matches->{'factor_2'} / $matches->{'factor_1'});
+    }
 
 ###
 ### while massaging output is left to the implementation, there are some cases
@@ -160,8 +154,7 @@ sub convert {
 ###            $f_result = (sprintf "%.${precision}g", $result);
 ###        }
 ###   
-
-    return sprintf("%.$conversion->{'precision'}f", $result);
+    return $matches;
 };
 
 sub get_units {
@@ -988,7 +981,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.016
+Version 0.017
 
 =head1 SYNOPSIS
 
@@ -998,7 +991,7 @@ C<use Convert::Pluggable;>
 
 C<...>
 
-C< my $result = $c->convert( { 'factor' => '5', 'fromUnit' => 'feet', 'toUnit' => 'inches', 'precision' => '3', } ); >
+C< my $result = $c->convert( { 'factor' => '5', 'from_unit' => 'feet', 'to_unit' => 'inches', 'precision' => '3', } ); >
 
 will produce '60.000'.
 
@@ -1130,6 +1123,10 @@ add more unit types (digital, cooking, etc.)
 =item *
 
 add more tests and better test output
+
+=item *
+
+fix tests
 
 =item *
 
