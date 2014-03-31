@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.017';
+our $VERSION = '0.018';
 
 sub new {
     my $class = shift;
@@ -60,10 +60,10 @@ sub get_matches {
     my $matches = shift;
     my @matches = @{$matches};
 
-###    $matches[0] =~ s/"/inches/; 
-###    $matches[0] =~ s/'/feet/; 
-###    $matches[1] =~ s/"/inches/; 
-###    $matches[1] =~ s/'/feet/;
+    $matches[0] =~ s/"/inches/; 
+    $matches[0] =~ s/'/feet/; 
+    $matches[1] =~ s/"/inches/; 
+    $matches[1] =~ s/'/feet/;
 
     # often a choke point, so leaving this in:
     #use Data::Dumper; print STDERR Dumper(\@matches);
@@ -103,6 +103,15 @@ sub get_matches {
     return \%matches;
 }
 
+# thanks, @mwmiller!
+sub parse_number {
+    my $in = shift;
+
+    my $out = ($in =~ /^(-?\d*(?:\.?\d+))\^(-?\d*(?:\.?\d+))$/) ? $1**$2 : $in;
+
+    return 0 + $out;
+}
+
 sub convert {
     my $self = shift;
 
@@ -118,7 +127,9 @@ sub convert {
     }
     else {
         # if it doesn't look like a number, and it contains a number (e.g., '6^2'):
-        return if $conversion->{'factor'} =~ /\d/;
+        $conversion->{'factor'} = parse_number($conversion->{'factor'});
+
+        #return if $conversion->{'factor'} =~ /[^\d]/;
     }
     
     return if $conversion->{'factor'} =~ /[[:alpha:]]/;
@@ -342,6 +353,84 @@ sub get_units {
         },
     );
 
+###    # year is base unit for time
+###    # known SI units and aliases / plurals
+###    # used google's conversions
+###    my @time = (
+###        {
+###            'unit'      => 'day',
+###            'factor'    => '365.242',
+###            'aliases'   => ['days', 'dy', 'dys', 'd'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'second',
+###            'factor'    => '3.156e+7',
+###            'aliases'   => ['seconds', 'sec', 's'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'millisecond',
+###            'factor'    => '3.156e+10',
+###            'aliases'   => ['milliseconds', 'millisec', 'millisecs', 'ms'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'microsecond',
+###            'factor'    => '3.156e+13',
+###            'aliases'   => ['microseconds', 'microsec', 'microsecs', 'us'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'nanosecond',
+###            'factor'    => '3.156e+16',
+###            'aliases'   => ['nanoseconds', 'nanosec', 'nanosecs', 'ns'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'minute',
+###            'factor'    => '525949',
+###            'aliases'   => ['minutes', 'min', 'mins'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'hour',
+###            'factor'    => '8765.81',
+###            'aliases'   => ['hours', 'hr', 'hrs', 'h'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'week',
+###            'factor'    => 52.1775,
+###            'aliases'   => ['weeks', 'wks', 'wk'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'fortnight',
+###            'factor'    => 26.08875,
+###            'aliases'   => [],
+###            'type'      => 'duration',
+###        },
+###        {    
+###            'unit'      => 'month',
+###            'factor'    => 12,
+###            'aliases'   => ['months', 'mons', 'mns', 'mn'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'year',
+###            'factor'    => 1,
+###            'aliases'   => ['years', 'yr', 'yrs'],
+###            'type'      => 'duration',
+###        },
+###        {
+###            'unit'      => 'leap year',
+###            'factor'    => 366,
+###            'aliases'   => ['leap years', 'leapyear', 'leapyr', 'leapyrs'],
+###            'type'      => 'duration',
+###        },
+###    );
+
     # day is base unit for time
     # known SI units and aliases / plurals
     my @time = (
@@ -399,9 +488,9 @@ sub get_units {
             'aliases'   => [],
             'type'      => 'duration',
         },
-        {    # a month being defined as an average earth month (30.42)
+        {    
             'unit'      => 'month',
-            'factor'    => 1/30.42,
+            'factor'    => 12/365,
             'aliases'   => ['months', 'mons', 'mns', 'mn'],
             'type'      => 'duration',
         },
@@ -981,7 +1070,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.017
+Version 0.018
 
 =head1 SYNOPSIS
 
@@ -1052,6 +1141,20 @@ bradley andersen, C<< <bradley at pvnp.us> >>
 
 =head1 BUGS
 
+=over 4
+
+=item *
+
+Because of the base unit ('day'), time conversions are off:
+
+e.g.: '1 year to months' yields: '1 year is 11.999 months'
+
+=item *
+
+add back in guard against things like: '10 inches to 5 cm'
+
+=back
+
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
@@ -1084,9 +1187,8 @@ Special thanks to @mintsoft and @jagtalon
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2014 bradley andersen.
-
-No specific license yet.
+Copyright (c) 2014 Bradley Andersen. This program is free software; you can redistribute it and/or modify it under the
+same terms as Perl itself.
 
 =head1 PRIOR ART
 
@@ -1122,7 +1224,35 @@ add more unit types (digital, cooking, etc.)
 
 =item *
 
+support native perl numbers in queries: e.g.: '12.34e-56 cm to mm'
+
+=item *
+
+don't show decimals when integer answer? e.g.: '12.000' should be '12' (this may be something we leave to implementation)
+
+=item *
+
 add more tests and better test output
+
+=over 4
+
+=item *
+
+'1 year to months'
+
+=item *
+
+'16 years to months'
+
+=item *
+
+'12.34e-56 cm to mm'
+
+=item *
+
+'10 inches to 5 cm'
+
+=back
 
 =item *
 
