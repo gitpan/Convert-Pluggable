@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.019';
+our $VERSION = '0.020';
 
 sub new {
     my $class = shift;
@@ -65,9 +65,6 @@ sub get_matches {
     $matches[1] =~ s/"/inches/; 
     $matches[1] =~ s/'/feet/;
 
-    # often a choke point, so leaving this in:
-    #use Data::Dumper; print STDERR Dumper(\@matches);
-    
     my @match_types = ();
     my @factors = ();
     my @units = ();
@@ -240,7 +237,7 @@ sub get_units {
         {
             'unit'      => 'meter',
             'factor'    => '1',
-            'aliases'   => ['meters', 'metre', 'metres', 'm', 'ms'],
+            'aliases'   => ['meters', 'metre', 'metres', 'm'],
             'type'      => 'length',
         },
         {
@@ -1070,7 +1067,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.019
+Version 0.020
 
 =head1 SYNOPSIS
 
