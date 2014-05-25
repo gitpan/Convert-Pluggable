@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.020';
+our $VERSION = '0.021';
 
 sub new {
     my $class = shift;
@@ -38,20 +38,20 @@ sub convert_temperatures {
     my $from = shift;
     my $to = shift;
     my $factor = shift;
-    
+   
     # convert $from to fahrenheit:
-    if    ($from =~ /fahrenheit|f/i) { $factor = $factor;                       }
-    elsif ($from =~ /celsius|c/i)    { $factor = ($factor * 1.8) + 32;          }
-    elsif ($from =~ /kelvin|k/i)     { $factor = 1.8 * ($factor - 273.15) + 32; }
-    elsif ($from =~ /rankine|r/i)    { $factor = $factor - 459.67;              }
-    else                             { $factor = ($factor * 2.25) + 32;         }    # reaumur 
+    if    ($from =~ /fahrenheit|f/i) { $factor = $factor;                           }
+    elsif ($from =~ /celsius|c/i)    { $factor = ($factor * (9 / 5)) + 32;          }
+    elsif ($from =~ /kelvin|k/i)     { $factor = (9 / 5) * ($factor - 273.15) + 32; }
+    elsif ($from =~ /rankine|r/i)    { $factor = $factor - 459.67;                  }
+    else                             { $factor = ($factor * (9 / 4)) + 32;          } 
     
     # convert fahrenheit $to:
-    if    ($to   =~ /fahrenheit|f/i) { $factor = $factor;                       }
-    elsif ($to   =~ /celsius|c/i)    { $factor = ($factor - 32) * 0.555;        }
-    elsif ($to   =~ /kelvin|k/i)     { $factor = ($factor + 459.67) * 0.555;    }
-    elsif ($to   =~ /rankine|r/i)    { $factor = $factor + 459.67;              }
-    else                             { $factor = ($factor - 32) * 0.444;        }    # reaumur 
+    if    ($to   =~ /fahrenheit|f/i) { $factor = $factor;                           }
+    elsif ($to   =~ /celsius|c/i)    { $factor = ($factor - 32) * (5 / 9);          }
+    elsif ($to   =~ /kelvin|k/i)     { $factor = ($factor + 459.67) * (5 / 9);      }
+    elsif ($to   =~ /rankine|r/i)    { $factor = $factor + 459.67;                  }
+    else                             { $factor = ($factor - 32) * (4 / 9);          }
 
     return $factor;
 }
@@ -1067,7 +1067,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.020
+Version 0.021
 
 =head1 SYNOPSIS
 
