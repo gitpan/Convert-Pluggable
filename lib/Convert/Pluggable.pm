@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.021';
+our $VERSION = '0.022';
 
 sub new {
     my $class = shift;
@@ -201,25 +201,25 @@ sub get_units {
         },
         {
             'unit'    => 'microgram',
-            'factor'  => '1000000000',
+            'factor'  => 1_000_000_000_000,
             'aliases' => ['mcg', 'micrograms', 'mcgs'],
             'type'    => 'mass',
         },
         {
             'unit'    => 'kilogram',
-            'factor'  => '1000',
+            'factor'  => 1000,
             'aliases' => ['kg', 'kilo', 'kilogramme', 'kilograms', 'kgs', 'kilos', 'kilogrammes'],
             'type'    => 'mass',
         },
         {
             'unit'    => 'gram',
-            'factor'  => '1000000',
+            'factor'  => 1_000_000,
             'aliases' => ['g', 'gm', 'gramme', 'grams', 'gs', 'gms', 'grammes'],
             'type'    => 'mass',
         },
         {
             'unit'    => 'milligram',
-            'factor'  => '1000000000',
+            'factor'  => 1_000_000_000,
             'aliases' => ['mg', 'milligrams', 'mgs'],
             'type'    => 'mass',
         },
@@ -349,84 +349,6 @@ sub get_units {
             'type'      => 'length',
         },
     );
-
-###    # year is base unit for time
-###    # known SI units and aliases / plurals
-###    # used google's conversions
-###    my @time = (
-###        {
-###            'unit'      => 'day',
-###            'factor'    => '365.242',
-###            'aliases'   => ['days', 'dy', 'dys', 'd'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'second',
-###            'factor'    => '3.156e+7',
-###            'aliases'   => ['seconds', 'sec', 's'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'millisecond',
-###            'factor'    => '3.156e+10',
-###            'aliases'   => ['milliseconds', 'millisec', 'millisecs', 'ms'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'microsecond',
-###            'factor'    => '3.156e+13',
-###            'aliases'   => ['microseconds', 'microsec', 'microsecs', 'us'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'nanosecond',
-###            'factor'    => '3.156e+16',
-###            'aliases'   => ['nanoseconds', 'nanosec', 'nanosecs', 'ns'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'minute',
-###            'factor'    => '525949',
-###            'aliases'   => ['minutes', 'min', 'mins'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'hour',
-###            'factor'    => '8765.81',
-###            'aliases'   => ['hours', 'hr', 'hrs', 'h'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'week',
-###            'factor'    => 52.1775,
-###            'aliases'   => ['weeks', 'wks', 'wk'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'fortnight',
-###            'factor'    => 26.08875,
-###            'aliases'   => [],
-###            'type'      => 'duration',
-###        },
-###        {    
-###            'unit'      => 'month',
-###            'factor'    => 12,
-###            'aliases'   => ['months', 'mons', 'mns', 'mn'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'year',
-###            'factor'    => 1,
-###            'aliases'   => ['years', 'yr', 'yrs'],
-###            'type'      => 'duration',
-###        },
-###        {
-###            'unit'      => 'leap year',
-###            'factor'    => 366,
-###            'aliases'   => ['leap years', 'leapyear', 'leapyr', 'leapyrs'],
-###            'type'      => 'duration',
-###        },
-###    );
 
     # day is base unit for time
     # known SI units and aliases / plurals
@@ -1067,7 +989,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.021
+Version 0.022
 
 =head1 SYNOPSIS
 
