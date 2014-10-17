@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.022';
+our $VERSION = '0.024';
 
 sub new {
     my $class = shift;
@@ -969,9 +969,161 @@ sub get_units {
             'type'            => 'digital',
         },
     );
+	
+	# hectare is base unit for area
+    my @area = (
+        {
+            'unit'      => 'hectare',
+            'factor'    => 1,
+            'aliases'   => ['hectares', 'ha'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'acre',
+            'factor'    => 2.4710439,
+            'aliases'   => ['acres'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'square meter',
+            'factor'    => 10_000,
+            'aliases'   => ['square meters', 'metre^2', 'meter^2', 'metres^2', 'meters^2', 'square metre', 'square metres', 'm^2', 'm²'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'square kilometer',
+            'factor'    => 100,
+            'aliases'   => ['square kilometers', 'square kilometre', 'square kilometres', 'km^2', 'km²'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'square centimeter',
+            'factor'    => 100_000_000,
+            'aliases'   => ['square centimeters', 'square centimetre', 'square centimetres', 'cm^2', 'cm²'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'square millimeter',
+            'factor'    => 10_000_000_000,
+            'aliases'   => ['square millimeters', 'square millimetre', 'square millimetres', 'mm^2', 'mm²'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'square mile',
+            'factor'    => 1/258.99881,
+            'aliases'   => ['square miles', 'square statute mile', 'square statute miles', 'square land mile', 'square land miles', 'miles^2', 'miles²'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'square yard',
+            'factor'    => 11959.9,
+            'aliases'   => ['square yards', 'yard^2', 'yard²', 'yards²', 'yards^2', 'yd^2', 'yd²', 'yrd^2', 'yrd²'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'square foot',
+            'factor'    => 107639.1,
+            'aliases'   => ['square feet', 'feet^2', 'feet²', 'foot^2', 'foot²', 'ft²', 'ft^2'],
+            'type'      => 'area',
+        },
+        {
+            'unit'      => 'square inch',
+            'factor'    => 15500031,
+            'aliases'   => ['square inches', 'inch^2','inches^2', 'squinch', 'in^2', 'in²'],
+            'type'      => 'area',
+        }
+    );
 
+	# litre is the base unit for volume
+	my @volume = (
+		{
+            'unit'      => 'litre',
+            'factor'    => 1,
+            'aliases'   => ['liter', 'litres', 'liters', 'l', 'litter', 'litters'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'millilitres',
+            'factor'    => 1000,
+            'aliases'   => ['milliliter', 'millilitres', 'milliliters', 'ml'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'cubic metre',
+            'factor'    => 1/1000,
+            'aliases'   => ['metre^3', 'meter^3', 'metres^3', 'meters^3', 'm^3', 'm³'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'cubic centimetre',
+            'factor'    => 1000,
+            'aliases'   => ['centimetre^3', 'centimeter^3', 'centimetres^3', 'centimeters^3', 'cm^3', 'cm³'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'cubic millimetre',
+            'factor'    => 1_000_000,
+            'aliases'   => ['millimetre^3', 'millimeter^3', 'millimetres^3', 'millimeters^3', 'mm^3', 'mm³'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'liquid pint',
+            'factor'    => 1000/473.176473,
+            'aliases'   => ['liquid pints', 'us pints', 'us liquid pint', 'us liquid pints'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'dry pint',
+            'factor'    => 1000/550.6104713575,
+            'aliases'   => ['dry pints'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'imperial',
+            'factor'    => 1000/568.26125,
+            'aliases'   => ['pints', 'pint', 'imperial pints', 'uk pint', 'british pint', 'pts'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'imperial gallon',
+            'factor'    => 1/4.54609,
+            'aliases'   => ['imperial gallon', 'uk gallon', 'british gallon', 'british gallons', 'uk gallons'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'us gallon',
+            'factor'    => 1/3.785411784,
+            'aliases'   => ['fluid gallon', 'us fluid gallon',  'fluid gallons', 'us gallons', 'gallon', 'gallons'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'quart',
+            'factor'    => 1/0.946352946,
+            'aliases'   => ['liquid quart', 'us quart', 'us quarts', 'quarts', 'liquid quarts'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'imperial quart',
+            'factor'    => 4*1000/568.26125,
+            'aliases'   => ['imperial quarts', 'british quarts', 'british quart'],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'imperial fluid ounce',
+            'factor'    => 16*1000/568.26125,
+            'aliases'   => ['imperial fluid ounces', 'imperial fl oz', 'imperial fluid oz', ],
+            'type'      => 'volume',
+        },
+		{
+            'unit'      => 'us fluid ounce',
+            'factor'    => 16*1000/473.176473,
+            'aliases'   => ['us fluid ounces', 'us fl oz', 'fl oz', 'fl. oz', 'fluid oz'],
+            'type'      => 'volume',
+        },
+	);
+	
     # unit types available for conversion
-    my @types = (@mass, @length, @time, @pressure, @energy, @power, @angle, @force, @temperature, @digital);    
+    my @types = (@mass, @length, @area, @volume, @time, @pressure, @energy, @power, @angle, @force, @temperature, @digital);    
     
     return \@types;
 }
@@ -989,7 +1141,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.022
+Version 0.024
 
 =head1 SYNOPSIS
 
