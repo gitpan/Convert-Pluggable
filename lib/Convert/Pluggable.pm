@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.025';
+our $VERSION = '0.026';
 
 sub new {
     my $class = shift;
@@ -1043,7 +1043,7 @@ sub get_units {
             'type'      => 'volume',
         },
 		{
-            'unit'      => 'millilitres',
+            'unit'      => 'millilitre',
             'factor'    => 1000,
             'aliases'   => ['milliliter', 'millilitres', 'milliliters', 'ml'],
             'type'      => 'volume',
@@ -1079,7 +1079,7 @@ sub get_units {
             'type'      => 'volume',
         },
 		{
-            'unit'      => 'imperial',
+            'unit'      => 'imperial pint',
             'factor'    => 1000/568.26125,
             'aliases'   => ['pints', 'pint', 'imperial pints', 'uk pint', 'british pint', 'pts'],
             'type'      => 'volume',
@@ -1141,7 +1141,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.025
+Version 0.026
 
 =head1 SYNOPSIS
 
