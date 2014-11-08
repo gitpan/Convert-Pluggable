@@ -11,7 +11,7 @@ use Exporter qw(import);
  
 our @EXPORT_OK = qw(convert get_units);
 
-our $VERSION = '0.024';
+our $VERSION = '0.025';
 
 sub new {
     my $class = shift;
@@ -992,7 +992,7 @@ sub get_units {
         },
         {
             'unit'      => 'square kilometer',
-            'factor'    => 100,
+            'factor'    => 0.01,
             'aliases'   => ['square kilometers', 'square kilometre', 'square kilometres', 'km^2', 'km²'],
             'type'      => 'area',
         },
@@ -1141,7 +1141,7 @@ Convert::Pluggable - convert between various units of measurement
 
 =head1 VERSION
 
-Version 0.024
+Version 0.025
 
 =head1 SYNOPSIS
 
@@ -1204,7 +1204,7 @@ This gets some useful metadata for convert() to carry out its work.
 =head2 get_units()
 
 This is where you add new unit types so that convert() can operate on them.  Currently supported units of measurement
-are: mass, length, time, pressure, energy, power, angle, force, temperature, digital. 
+are: mass, length, area, volume, time, pressure, energy, power, angle, force, temperature, digital. 
 
 =head2 parse_number()
 
@@ -1217,12 +1217,6 @@ bradley andersen, C<< <bradley at pvnp.us> >>
 =head1 BUGS
 
 =over 4
-
-=item *
-
-Because of the base unit ('day'), time conversions are off:
-
-e.g.: '1 year to months' yields: '1 year is 11.999 months'
 
 =item *
 
